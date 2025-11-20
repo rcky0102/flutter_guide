@@ -16,6 +16,10 @@ class _PracticeState extends State<Practice> {
   final TextEditingController priceController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  final TextEditingController quantityController = TextEditingController(
+    text: "1",
+  );
+  int quantity = 1;
 
   // Other form states
   bool inStock = false;
@@ -424,6 +428,71 @@ class _PracticeState extends State<Practice> {
                       });
                     },
                     child: const Text("Pick File"),
+                  ),
+                ],
+              ),
+
+              Row(
+                children: [
+                  const Text("Quantity: "),
+                  const SizedBox(width: 10),
+
+                  Container(
+                    width: 120,
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.grey),
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                    child: Row(
+                      children: [
+                        // Minus button
+                        IconButton(
+                          icon: const Icon(Icons.remove, size: 18),
+                          onPressed: () {
+                            setState(() {
+                              if (quantity > 1) quantity--;
+                              quantityController.text = quantity.toString();
+                            });
+                          },
+                        ),
+
+                        // Editable text field
+                        Expanded(
+                          child: TextField(
+                            controller: quantityController,
+                            keyboardType: TextInputType.number,
+                            textAlign: TextAlign.center,
+                            decoration: const InputDecoration(
+                              border: InputBorder.none,
+                            ),
+                            onChanged: (value) {
+                              setState(() {
+                                quantity = int.tryParse(value) ?? 1;
+                                quantityController.text = quantity.toString();
+                                quantityController.selection =
+                                    TextSelection.fromPosition(
+                                      TextPosition(
+                                        offset: quantityController.text.length,
+                                      ),
+                                    );
+                              });
+                            },
+                          ),
+                        ),
+
+                        // Plus button
+                        IconButton(
+                          icon: const Icon(Icons.add, size: 18),
+                          onPressed: () {
+                            setState(() {
+                              quantity++;
+                              quantityController.text = quantity.toString();
+                            });
+                          },
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),
